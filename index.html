@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Aplikace</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/cs.js"></script>
+</head>
+<body>
+    <div class="date-container">
+        <button id="show-calendar-button"></button>
+    </div>
+
+    <div class="navbar">
+        <ul>
+            <li><a href="#" class="nav-item" data-target="auctions">Dražby</a></li>
+            <li><a href="#" class="nav-item" data-target="price">Prodejní cena</a></li>
+            <li><a href="#" class="nav-item" data-target="notes">Poznámky</a></li>
+            <li><a href="#" class="nav-item" data-target="map">Mapa</a></li>
+            <li><a href="https://geopas.cz/mapa" target="_blank" class="nav-item">Info o domu/obci</a></li>
+            <li><a href="#" class="nav-item" data-target="graph">Graf</a></li>
+            <li><a href="https://nahlizenidokn.cuzk.gov.cz/VyberBudovu/Stavba/InformaceO" target="_blank" class="nav-item">Kontrola Katastru</a></li>
+            <li><a href="#" class="nav-item" data-target="nase-drazby">Naše dražby</a></li>
+            <li><a href="#" class="nav-item" data-target="information">Informace</a></li>
+            <li><a href="#" class="nav-item" data-target="saved-notes">Uložené poznámky</a></li>
+        </ul>
+    </div>
+
+    <div id="calendar-container" class="calendar-container" style="display: none;">
+        <div id="calendar"></div>
+        <textarea id="calendar-notes" placeholder="Zapiš své poznámky..."></textarea>
+        <button id="save-calendar-notes">Uložit poznámky</button>
+    </div>
+
+    <div id="auctions" class="content-section" style="display: none;">
+        <div id="images-row" style="margin-top: 20px; text-align: center;">
+            <img src="images/ikona1.png" alt="Ikona 1" class="image-medium">
+            <img src="images/ikona2.png" alt="Ikona 2" class="image-medium">
+            <img src="images/ikona3.png" alt="Ikona 3" class="image-medium">
+            <img src="images/ikona4.png" alt="Ikona 4" class="image-medium">
+            <img src="images/ikona5.png" alt="Ikona 5" class="image-medium">
+        </div>
+    </div>
+
+    <div id="price" class="content-section" style="display: none;">
+        <h2>Prodejní cena</h2>
+        <p>Pro zjištění aktuálních cen nemovitostí navštivte následující odkaz:</p>
+        <a href="https://www.sreality.cz/ceny-nemovitosti?lokalita=Nespeky&typ=pozemky&region-id=3527" target="_blank">Ceny nemovitostí na Sreality.cz</a>
+        <div id="price-results" style="margin-top: 20px;"></div>
+    </div>
+
+    <div id="notes" class="content-section" style="display: none;">
+        <h2>Poznámky</h2>
+        <textarea id="notes-input" placeholder="Zapiš své poznámky..." style="height: 400px; width: 100%;"></textarea>
+        <input type="text" id="note-title-input" placeholder="Název poznámky" style="width: 100%; margin-top: 10px; padding: 10px; font-size: 16px;">
+        <button id="save-notes">Uložit poznámky</button>
+        <label for="font-size-input">Velikost písma:</label>
+        <input type="number" id="font-size-input" value="16" style="width: 50px;">
+    </div>
+
+    <div id="map" class="content-section" style="display: none;">
+        <h2>Mapa</h2>
+        <div id="mapid" style="height: 300px; width: 100%; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"></div>
+    </div>
+
+    <div id="graph" class="content-section" style="display: none;">
+        <h2>Graf</h2>
+        <canvas id="chartCanvas"></canvas>
+    </div>
+
+    <div id="nase-drazby" class="content-section" style="display: none;">
+        <h2>Naše dražby</h2>
+        <!-- Obsah sekce Naše dražby -->
+    </div>
+
+    <div id="information" class="content-section" style="display: none;">
+        <h2>Informace</h2>
+        <div class="info-background">
+            <ul>
+                <li><a href="#" class="nav-item" data-target="valuation-type">Druh odhadu ceny</a></li>
+                <li><a href="#" class="nav-item" data-target="building-type">Staveb podle druhu pozemku</a></li>
+                <li><a href="#" class="nav-item" data-target="land-liens">Závazky pozemku</a></li>
+                <li><a href="#" class="nav-item" data-target="land-obligations">Povinnosti pozemku</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="valuation-type" class="content-section" style="display: none;">
+        <h2>Druh odhadu ceny</h2>
+        <ul>
+            <h2>Druh odhadu ceny</h2>
+            <ul>
+                <li>1. Vyhláškový odhad: Zahrnuje stanovení ceny nemovitosti podle předpisů a vyhlášek, často používaný pro účely finančního úřadu při prodeji nemovitosti.</li>
+                <li>2. Tržní odhad: Stanovuje aktuální tržní cenu nemovitosti na základě srovnatelných prodejů a aktuálního trhu. Používá se především při žádostech o hypotéku.</li>
+                <li>3. Bankovní odhad: Tento odhad je prováděn bankou při schvalování hypotečního úvěru. Banka potřebuje znát zástavní hodnotu nemovitosti.</li>
+                <li>4. Soudní odhad: Používá se při majetkových sporech u soudu, například při rozvodovém řízení nebo insolvenci.</li>
+                <li>5. Odhad pro dědické řízení: Notář může požadovat stanovení tržní ceny nemovitosti při vyřizování dědictví.</li>
+                <li>6. Odhad optimální výše nájmu: Tento odhad se používá k určení optimální výše nájmu pro byt nebo dům.</li>
+                <li>7. Administrativní odhad: Stanovení ceny nemovitosti pro daňové účely, často na základě tabulkových hodnot a metod stanovených zákonem.</li>
+                <li>8. BPEJ (Bonitovaná půdně ekologická jednotka): Tato metoda je používaná pro ocenění zemědělských pozemků.</li>
+                <li>9. Výnosový odhad: Tato metoda hodnotí nemovitost na základě jejího výnosu, tedy příjmu, který může generovat.</li>
+                <li>10. Srovnávací odhad: Metoda porovnává danou nemovitost s obdobnými nemovitostmi v okolí, které byly nedávno prodány.</li>
+                <li>11. Metoda nákladů: Tato metoda stanoví cenu nemovitosti na základě nákladů na její výstavbu nebo obnovu, odečítajíc opotřebení.</li>
+            </ul>
+        </div>
+        </ul>
+    </div>
+
+    <div id="building-type" class="content-section" style="display: none;">
+        <h2>Možnost stavby podle druhu pozemku</h2>
+        <ul>
+            <li><strong>Stavební pozemek</strong>: Určen pro výstavbu rodinných domů, bytových domů, komerčních budov a dalších staveb pro bydlení nebo podnikání.
+                <ul>
+                    <li>Rodinný dům</li>
+                    <li>Bytový dům</li>
+                    <li>Obchod</li>
+                    <li>Kancelářské prostory</li>
+                    <li>Průmyslové objekty</li>
+                </ul>
+            </li>
+            <li><strong>Zahrada</strong>: Plocha určená převážně pro zahrádkářské účely, pěstování rostlin a rekreaci.
+                <ul>
+                    <li>Zahradní domek</li>
+                    <li>Skleník</li>
+                    <li>Altán</li>
+                    <li>Drobné rekreační stavby</li>
+                </ul>
+            </li>
+            <li><strong>Orná půda</strong>: Zemědělská půda určená pro pěstování plodin.
+                <ul>
+                    <li>Zemědělské stavby (skladovací prostory, stáje)</li>
+                    <li>Technické stavby pro zemědělskou činnost (např. závlahové systémy)</li>
+                </ul>
+            </li>
+            <li><strong>Louky a pastviny</strong>: Plochy určené pro pěstování trávy a pastvu dobytka.
+                <ul>
+                    <li>Zemědělské stavby (stodoly, seníky, stáje)</li>
+                    <li>Přístřešky pro zvířata</li>
+                </ul>
+            </li>
+            <li><strong>Lesní pozemky</strong>: Plochy pokryté lesním porostem, určené pro pěstování lesa a těžbu dřeva.
+                <ul>
+                    <li>Lesní cesty</li>
+                    <li>Přístřešky pro lesní práce</li>
+                    <li>Myslivecké chaty</li>
+                </ul>
+            </li>
+            <li><strong>Vodní plochy</strong>: Plochy zahrnující rybníky, jezera, přehrady a další vodní nádrže.
+                <ul>
+                    <li>Rybářské chatky</li>
+                    <li>Mola</li>
+                    <li>Technické stavby pro vodohospodářské účely</li>
+                </ul>
+            </li>
+            <li><strong>Sportovní a rekreační plochy</strong>: Plochy určené pro sportovní a rekreační aktivity.
+                <ul>
+                    <li>Sportovní haly</li>
+                    <li>Hřiště</li>
+                    <li>Bazény</li>
+                    <li>Rekreační chaty</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+        <!-- Obsah sekce Staveb podle druhu pozemku -->
+    </div>
+
+    <div id="land-liens" class="content-section" style="display: none;">
+        <h2>Závazky pozemku</h2>
+        <ul>
+            <li>1. <strong>Stavební pozemek</strong>: Dodržování stavebních předpisů a územního plánu, získání stavebního povolení před zahájením stavby, dodržování bezpečnostních a hygienických norem.</li>
+            <li>2. <strong>Zahrada</strong>: Udržování pozemku v dobrém stavu, dodržování místních předpisů týkajících se zahradních staveb (např. skleníky, altány), zajištění, aby zahrada nebyla zdrojem obtěžování sousedů.</li>
+            <li>3. <strong>Orná půda</strong>: Dodržování zemědělských předpisů, ochrana půdy před erozí, udržování půdy v dobrém stavu pro pěstování plodin, dodržování pravidel pro používání hnojiv a pesticidů.</li>
+            <li>4. <strong>Louky a pastviny</strong>: Udržování pozemku v dobrém stavu pro pastvu dobytka, dodržování pravidel pro ochranu přírody a krajiny, zajištění, aby pastviny nebyly zdrojem znečištění vodních toků.</li>
+            <li>5. <strong>Lesní pozemky</strong>: Dodržování lesního zákona, ochrana lesního porostu před škůdci a požáry, udržování lesních cest, zajištění trvale udržitelného hospodaření s lesem.</li>
+            <li>6. <strong>Vodní plochy</strong>: Dodržování vodního zákona, ochrana vodních zdrojů před znečištěním, udržování břehů a okolí vodních ploch, zajištění bezpečnosti při využívání vodních ploch.</li>
+            <li>7. <strong>Sportovní a rekreační plochy</strong>: Dodržování bezpečnostních a hygienických norem, zajištění údržby a čistoty sportovních zařízení, dodržování pravidel pro ochranu přírody a krajiny.</li>
+        </ul>
+    </div>
+        <!-- Obsah sekce Závazky pozemku -->
+    </div>
+
+    <div id="land-obligations" class="content-section" style="display: none;">
+        <h2>Druh pozemku a možnost oplocení</h2>
+        <ul>
+            <li>1. <strong>Stavební pozemek</strong>: Určený pro výstavbu rodinných domů, bytových domů, komerčních budov a dalších staveb pro bydlení nebo podnikání.
+                <ul>
+                    <li>Oplocení: Ano, stavební pozemky lze oplocovat, ale je nutné dodržovat místní stavební předpisy a získat případná povolení. Typ plotu: pevné ploty (např. betonové, dřevěné, kovové).</li>
+                </ul>
+            </li>
+            <li>2. <strong>Zahrada</strong>: Plocha určená převážně pro zahrádkářské účely, pěstování rostlin a rekreaci.
+                <ul>
+                    <li>Oplocení: Ano, zahrady lze oplocovat. Ploty by měly být v souladu s místními předpisy a nezpůsobovat obtěžování sousedů. Typ plotu: dřevěné ploty, pletivové ploty.</li>
+                </ul>
+            </li>
+            <li>3. <strong>Orná půda</strong>: Zemědělská půda určená pro pěstování plodin.
+                <ul>
+                    <li>Oplocení: Obvykle se neočekává, že bude orná půda oplocena, ale v některých případech může být oplocení povoleno pro ochranu plodin před zvířaty. Typ plotu: jednoduché pletivové ploty.</li>
+                </ul>
+            </li>
+            <li>4. <strong>Louky a pastviny</strong>: Plochy určené pro pěstování trávy a pastvu dobytka.
+                <ul>
+                    <li>Oplocení: Ano, oplocení je běžné pro pastviny, aby se zajistila bezpečnost dobytka a zabránilo se jejich úniku. Typ plotu: dřevěné nebo kovové ploty, elektrické ohradníky.</li>
+                </ul>
+            </li>
+            <li>5. <strong>Lesní pozemky</strong>: Plochy pokryté lesním porostem, určené pro pěstování lesa a těžbu dřeva.
+                <ul>
+                    <li>Oplocení: Obvykle není nutné oplocení lesních pozemků, ale může být použito pro ochranu před zvěří nebo pro vymezení lesních cest. Typ plotu: dřevěné ploty, pletivové ploty.</li>
+                </ul>
+            </li>
+            <li>6. <strong>Vodní plochy</strong>: Plochy zahrnující rybníky, jezera, přehrady a další vodní nádrže.
+                <ul>
+                    <li>Oplocení: Oplocení je možné pro zajištění bezpečnosti, zejména kolem přístupových cest a rekreačních oblastí. Je třeba dodržovat místní předpisy a bezpečnostní normy. Typ plotu: pletivové ploty, dřevěné ploty.</li>
+                </ul>
+            </li>
+            <li>7. <strong>Sportovní a rekreační plochy</strong>: Plochy určené pro sportovní a rekreační aktivity.
+                <ul>
+                    <li>Oplocení: Ano, sportovní a rekreační plochy často vyžadují oplocení pro zajištění bezpečnosti a ochrany majetku. Typ plotu: vysoké pletivové ploty, bezpečnostní ploty.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    
+        <!-- Obsah sekce Druhy pozemku a možnost oplocení -->
+    </div>
+
+    <div id="saved-notes" class="content-section" style="display: none;">
+        <h2>Uložené poznámky</h2>
+        <ul id="saved-notes-list"></ul>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="/ikona-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/ikona-512x512.png">
+<meta name="theme-color" content="#000000">
