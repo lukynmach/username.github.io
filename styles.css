@@ -1,12 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('https://lukynmach.github.io/username.github.io/logo.png');
+    background-image: url('images/logo.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-
-
 
 .navbar {
     background-color: #333;
@@ -129,33 +127,39 @@ ul {
     list-style-type: none;
     padding: 0;
 }
-/* Styly pro obrázky */
-.image-medium {
-    max-width: 100%;
-    height: auto;
-}
 
-/* Flexbox pro zarovnání obrázků ve středu */
-#images-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* Responsivní styly pro různá zařízení */
-@media (max-width: 768px) {
-    .image-medium {
-        width: 90%;
-    }
-}
-
-@media (max-width: 480px) {
-    .image-medium {
-        width: 80%;
-    }
-}
-/* Stylování názvu dražby */
 .auction-title {
     font-size: 1.5em; /* Nastav velikost písma podle potřeby */
     font-weight: bold;
+}
+.login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-height: 250px; /* Zvětšení minimální výšky */
+}
+
+.login-container input {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 20px auto; /* Zvýšení mezery kolem vstupních polí */
+    padding: 15px; /* Zvýšení výšky vstupních polí */
+    font-size: 16px;
+}
+
+#login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
