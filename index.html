@@ -14,14 +14,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/cs.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('logo.png'); /* Cesta k souboru s logem */
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
-
         .login-container {
             position: fixed;
             top: 50%;
@@ -44,13 +36,6 @@
             justify-content: center;
             align-items: center;
         }
-
-        .logo {
-            width: 100px; /* Nastav šířku loga podle potřeby */
-            height: auto; /* Zachovej poměr stran */
-            display: block;
-            margin: 0 auto; /* Vycentrování loga */
-        }
     </style>
 </head>
 <body>
@@ -68,7 +53,7 @@
         <button id="show-calendar-button"></button>
     </div>
 
-    <div class="navbar">
+ <div class="navbar">
         <ul>
             <li><a href="#" class="nav-item" data-target="auctions">Dražby</a></li>
             <li><a href="#" class="nav-item" data-target="price">Prodejní cena</a></li>
@@ -89,25 +74,31 @@
         <button id="save-calendar-notes">Uložit poznámky</button>
     </div>
 
-    <div id="auctions" class="content-section" style="display: none;">
-        <div id="images-row" style="margin-top: 20px; text-align: center;">
-            <a href="https://okdrazby.cz/pripravovane" target="_blank">
-                <img src="ikona1.png" alt="Ikona 1" class="image-medium">
-            </a>
-            <a href="https://www.exdrazby.cz/" target="_blank">
-                <img src="ikona2.png" alt="Ikona 2" class="image-medium">
-            </a>
-            <a href="https://www.drazby-exekutori.cz/" target="_blank">
-                <img src="ikona3.png" alt="Ikona 3" class="image-medium">
-            </a>
-            <a href="https://www.portaldrazeb.cz/drazby/pripravovane" target="_blank">
-                <img src="ikona4.png" alt="Ikona 4" class="image-medium">
-            </a>
-            <a href="https://reality.idnes.cz/s/drazba/" target="_blank">
-                <img src="ikona5.png" alt="Ikona 5" class="image-medium">
-            </a>
-        </div>
-    
+ <div id="auctions" class="content-section" style="display: none;">
+    <div id="images-row" style="margin-top: 20px; text-align: center;">
+        <a href="https://okdrazby.cz/pripravovane" target="_blank">
+            <img src="ikona1.png" alt="Ikona 1" class="image-medium">
+        </a>
+        <a href="https://www.exdrazby.cz/" target="_blank">
+            <img src="ikona2.png" alt="Ikona 2" class="image-medium">
+        </a>
+        <a href="https://www.drazby-exekutori.cz/" target="_blank">
+            <img src="ikona3.png" alt="Ikona 3" class="image-medium">
+        </a>
+        <a href="https://www.portaldrazeb.cz/drazby/pripravovane" target="_blank">
+            <img src="ikona4.png" alt="Ikona 4" class="image-medium">
+        </a>
+        <a href="https://reality.idnes.cz/s/drazba/" target="_blank">
+            <img src="ikona5.png" alt="Ikona 5" class="image-medium">
+        </a>
+    </div>
+</div>
+
+
+
+
+
+
     <div id="price" class="content-section" style="display: none;">
         <h2>Prodejní cena</h2>
         <p>Pro zjištění aktuálních cen nemovitostí navštivte následující odkaz:</p>
