@@ -205,4 +205,52 @@ if ('serviceWorker' in navigator) {
       });
     });
   }
-  
+  document.addEventListener('DOMContentLoaded', function () {
+    // Funkce pro aktualizaci seznamu uložených dražeb v sekci "Naše dražby"
+    function updateSavedAuctionsList() {
+        const savedAuctionsList = document.getElementById('saved-auctions-list');
+        const savedAuctions = JSON.parse(localStorage.getItem('savedAuctions')) || [];
+        savedAuctionsList.innerHTML = '';
+        savedAuctions.forEach((auction, index) => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <a href="${auction.url}" target="_blank">${auction.title}</a>
+                <button class="delete-auction-button" data-index="${index}">Smazat</button>
+            `;
+            savedAuctionsList.appendChild(listItem);
+        });
+
+        // Přidání event listenerů pro tlačítka smazání
+        const deleteButtons = document.querySelectorAll('.delete-auction-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const index = button.getAttribute('data-index');
+                savedAuctions.splice(index, 1);
+                localStorage.setItem('savedAuctions', JSON.stringify(savedAuctions));
+                updateSavedAuctionsList();
+            });
+        });
+    }
+
+    // Uložení nové dražby
+    const saveAuctionButton = document.getElementById('save-auction-button');
+    saveAuctionButton.addEventListener('click', function () {
+        const auctionTitle = document.getElementById('auction-title-input').value;
+        const auctionUrl = document.getElementById('auction-url-input').value;
+
+        if (auctionTitle && auctionUrl) {
+            let savedAuctions = JSON.parse(localStorage.getItem('savedAuctions')) || [];
+            savedAuctions.push({ title: auctionTitle, url: auctionUrl });
+            localStorage.setItem('savedAuctions', JSON.stringify(savedAuctions));
+            updateSavedAuctionsList();
+            document.getElementById('auction-title-input').value = ''; // Vyprázdnění vstupu pro název dražby
+            document.getElementById('auction-url-input').value = ''; // Vyprázdnění vstupu pro odkaz na dražbu
+        } else {
+            alert('Prosím, vyplňte oba políčka.');
+        }
+    });
+
+    // Aktualizace seznamu při načtení stránky
+    updateSavedAuctionsList();
+});
+
