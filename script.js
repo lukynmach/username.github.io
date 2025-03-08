@@ -214,7 +214,7 @@ if ('serviceWorker' in navigator) {
         savedAuctions.forEach((auction, index) => {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-                <a href="${auction.url}" target="_blank">${auction.title}</a>
+                <a href="${auction.url}" target="_blank" class="auction-title">${auction.title}</a>
                 <button class="delete-auction-button" data-index="${index}">Smazat</button>
             `;
             savedAuctionsList.appendChild(listItem);
@@ -253,4 +253,3 @@ if ('serviceWorker' in navigator) {
     // Aktualizace seznamu při načtení stránky
     updateSavedAuctionsList();
 });
-
