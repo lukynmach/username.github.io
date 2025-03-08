@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const loginModal = document.getElementById('login-modal');
+    const loginButton = document.getElementById('login-button');
+    const loginError = document.getElementById('login-error');
+
+    loginButton.addEventListener('click', function () {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if ((username === 'Lukas' && password === '150519') || (username === 'Honza' && password === '651022')) {
+            loginModal.style.display = 'none';
+        } else {
+            loginError.style.display = 'block';
+        }
+    });
     const sections = document.querySelectorAll('.content-section');
     const navItems = document.querySelectorAll('.nav-item');
 
