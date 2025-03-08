@@ -253,3 +253,68 @@ if ('serviceWorker' in navigator) {
     // Aktualizace seznamu při načtení stránky
     updateSavedAuctionsList();
 });
+document.addEventListener('DOMContentLoaded', function () {
+    // Funkce pro aktualizaci seznamu uložených poznámek v sekci "Uložené poznámky"
+    function updateSavedNotesList() {
+        const savedNotesList = document.getElementById('saved-notes-list');
+        const savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+        savedNotesList.innerHTML = '';
+        savedNotes.forEach((note, index) => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <h3 class="note-title" data-index="${index}">${note.title}</h3>
+                <p class="note-content" style="display: none;">${note.content}</p>
+                <button class="delete-note-button" data-index="${index}">Smazat</button>
+            `;
+            savedNotesList.appendChild(listItem);
+        });
+
+        // Přidání event listenerů pro zobrazení/skrytí obsahu poznámky
+        const noteTitles = document.querySelectorAll('.note-title');
+        noteTitles.forEach(title => {
+            title.addEventListener('click', function () {
+                const content = title.nextElementSibling;
+                content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+
+        // Přidání event listenerů pro tlačítka smazání
+        const deleteButtons = document.querySelectorAll('.delete-note-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const index = button.getAttribute('data-index');
+                savedNotes.splice(index, 1);
+                localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
+                updateSavedNotesList();
+            });
+        });
+    }
+
+    // Uložení nové poznámky
+    const saveNotesButton = document.getElementById('save-notes');
+    saveNotesButton.addEventListener('click', function () {
+        const noteTitle = document.getElementById('note-title-input').value;
+        const noteContent = document.getElementById('notes-input').value;
+
+        if (noteTitle && noteContent) {
+            let savedNotes = JSON.parse(localStorage.getItem('savedNotes')) || [];
+            savedNotes.push({ title: noteTitle, content: noteContent });
+            localStorage.setItem('savedNotes', JSON.stringify(savedNotes));
+            updateSavedNotesList();
+            document.getElementById('note-title-input').value = ''; // Vyprázdnění vstupu pro název poznámky
+            document.getElementById('notes-input').value = ''; // Vyprázdnění textového pole pro poznámky
+        } else {
+            alert('Prosím, vyplňte oba políčka.');
+        }
+    });
+
+    // Aktualizace seznamu při načtení stránky
+    updateSavedNotesList();
+
+    // Změna velikosti písma v poznámkovém bloku
+    const fontSizeInput = document.getElementById('font-size-input');
+    fontSizeInput.addEventListener('input', function () {
+        const notesInput = document.getElementById('notes-input');
+        notesInput.style.fontSize = `${fontSizeInput.value}px`;
+    });
+});
