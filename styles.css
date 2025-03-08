@@ -129,3 +129,28 @@ ul {
     list-style-type: none;
     padding: 0;
 }
+/* Styly pro obrázky */
+.image-medium {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Flexbox pro zarovnání obrázků ve středu */
+#images-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Responsivní styly pro různá zařízení */
+@media (max-width: 768px) {
+    .image-medium {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-medium {
+        width: 80%;
+    }
+}
