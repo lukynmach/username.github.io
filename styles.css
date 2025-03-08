@@ -169,3 +169,9 @@ ul {
     justify-content: center;
     align-items: center;
 }
+.logo {
+    width: 100px; /* Nastav šířku loga podle potřeby */
+    height: auto; /* Zachovej poměr stran */
+    display: block;
+    margin: 0 auto; /* Vycentrování loga */
+}
