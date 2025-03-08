@@ -13,13 +13,47 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/cs.js"></script>
+    <style>
+        .login-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
+    <div id="login-modal" style="display: block;">
+        <div class="login-container">
+            <h2>Přihlášení</h2>
+            <input type="text" id="username" placeholder="Jméno">
+            <input type="password" id="password" placeholder="Heslo">
+            <button id="login-button">Přihlásit se</button>
+            <p id="login-error" style="color: red; display: none;">Neplatné jméno nebo heslo</p>
+        </div>
+    </div>
+
     <div class="date-container">
         <button id="show-calendar-button"></button>
     </div>
 
-    <div class="navbar">
+ <div class="navbar">
         <ul>
             <li><a href="#" class="nav-item" data-target="auctions">Dražby</a></li>
             <li><a href="#" class="nav-item" data-target="price">Prodejní cena</a></li>
