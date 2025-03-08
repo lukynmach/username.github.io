@@ -154,3 +154,8 @@ ul {
         width: 80%;
     }
 }
+/* Stylování názvu dražby */
+.auction-title {
+    font-size: 1.5em; /* Nastav velikost písma podle potřeby */
+    font-weight: bold;
+}
