@@ -93,7 +93,7 @@
             <li><a href="#" class="nav-item" data-target="notes">Poznámky</a></li>
             <li><a href="#" class="nav-item" data-target="map">Mapa</a></li>
             <li><a href="https://geopas.cz/mapa" target="_blank" class="nav-item">Info o domu/obci</a></li>
-            <li><a href="#" class="nav-item" data-target="graph">Graf</a></li>
+            <li><a href="#" class="nav-item" data-target="profit-table">Tabulka profitu</a></li>
             <li><a href="https://nahlizenidokn.cuzk.gov.cz/VyberBudovu/Stavba/InformaceO" target="_blank" class="nav-item">Kontrola Katastru</a></li>
             <li><a href="#" class="nav-item" data-target="nase-drazby">Naše dražby</a></li>
             <li><a href="#" class="nav-item" data-target="information">Informace</a></li>
@@ -128,11 +128,7 @@
 </div>
 
 
-
-
-
-
-    <div id="price" class="content-section" style="display: none;">
+<div id="price" class="content-section" style="display: none;">
         <h2>Prodejní cena</h2>
         <p>Pro zjištění aktuálních cen nemovitostí navštivte následující odkaz:</p>
         <a href="https://www.sreality.cz/ceny-nemovitosti?lokalita=Nespeky&typ=pozemky&region-id=3527" target="_blank">Ceny nemovitostí na Sreality.cz</a>
@@ -159,10 +155,45 @@
         <div id="mapid" style="height: 300px; width: 100%; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"></div>
     </div>
 
-    <div id="graph" class="content-section" style="display: none;">
-        <h2>Graf</h2>
-        <canvas id="chartCanvas"></canvas>
+    <div id="profit-table" class="content-section" style="display: none;">
+        <!-- Obsah tabulky profitu -->
+        <h1>Tabulka pro výpočet profitu</h1>
+        <table id="profitTable">
+            <thead>
+                <tr>
+                    <th>Fotka</th>
+                    <th>Název</th>
+                    <th>Kupní cena</th>
+                    <th>Investice</th>
+                    <th>Prodáno za</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="file" accept="image/*" onchange="previewImage(event, this)"><img class="image-preview"></td>
+                    <td><input type="text" class="name"></td>
+                    <td><input type="number" class="bought" value="0"></td>
+                    <td><input type="number" class="invested" value="0"></td>
+                    <td><input type="number" class="sold" value="0"></td>
+                    <td class="profit">0</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td>Celkem</td>
+                    <td></td>
+                    <td id="totalBought">0</td>
+                    <td id="totalInvested">0</td>
+                    <td id="totalSold">0</td>
+                    <td id="totalProfit">0</td>
+                </tr>
+            </tfoot>
+        </table>
+        <button onclick="addRow()">Přidat řádek</button>
+        <button onclick="calculateTotals()">Vypočítat</button>
     </div>
+    
 
     <div id="nase-drazby" class="content-section" style="display: none;">
     <h2>Naše dražby</h2>
