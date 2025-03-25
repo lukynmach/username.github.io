@@ -46,11 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(initMap, 100); // Počkáme 100 ms před inicializací mapy
                 window.mapInitialized = true;
             }
-
-            if (item.dataset.target === 'graph' && !window.chartInitialized) {
-                initGraph();
-                window.chartInitialized = true;
-            }
         });
     });
 
@@ -89,34 +84,18 @@ document.addEventListener('DOMContentLoaded', function () {
         map.invalidateSize(); // Přizpůsobení velikosti mapy okénku
     }
 
-    // Inicializace grafu
-    function initGraph() {
-        const ctx = document.getElementById('chartCanvas').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
-                datasets: [{
-                    label: 'Historická data',
-                    data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: true,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                    },
-                    y: {
-                        beginAtZero: true,
-                    }
-                }
+    navItems.forEach(item => {
+        item.addEventListener('click', function () {
+            const target = document.getElementById(item.dataset.target);
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            if (target) {
+                target.style.display = 'block';
             }
         });
-    }
+    });
+    
 
     // Funkce pro výpočet ceny za m²
     async function calculatePricePerSquareMeter(kod) {
@@ -331,4 +310,116 @@ document.addEventListener('DOMContentLoaded', function () {
         const notesInput = document.getElementById('notes-input');
         notesInput.style.fontSize = `${fontSizeInput.value}px`;
     });
+});function previewImage(event, input) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function() {
+        const imgElement = input.nextElementSibling;
+        imgElement.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function addRow() {
+    const table = document.querySelector("#profitTable tbody");
+    const newRow = `
+        <tr>
+            <td><input type="file" accept="image/*" onchange="previewImage(event, this)"><img class="image-preview"></td>
+            <td><input type="text" class="name"></td>
+            <td><input type="number" class="bought" value="0"></td>
+            <td><input type="number" class="invested" value="0"></td>
+            <td><input type="number" class="sold" value="0"></td>
+            <td class="profit">0</td>
+        </tr>`;
+    table.insertAdjacentHTML("beforeend", newRow);
+}
+
+function calculateTotals() {
+    let totalBought = 0;
+    let totalInvested = 0;
+    let totalSold = 0;
+    let totalProfit = 0;
+
+    document.querySelectorAll("#profitTable tbody tr").forEach(row => {
+        const bought = parseFloat(row.querySelector(".bought").value) || 0;
+        const invested = parseFloat(row.querySelector(".invested").value) || 0;
+        const sold = parseFloat(row.querySelector(".sold").value) || 0;
+
+        const profit = sold - (bought + invested);
+        row.querySelector(".profit").textContent = profit.toFixed(2);
+
+        totalBought += bought;
+        totalInvested += invested;
+        totalSold += sold;
+        totalProfit += profit;
+    });
+
+    document.getElementById("totalBought").textContent = totalBought.toFixed(2);
+    document.getElementById("totalInvested").textContent = totalInvested.toFixed(2);
+    document.getElementById("totalSold").textContent = totalSold.toFixed(2);
+    document.getElementById("totalProfit").textContent = totalProfit.toFixed(2);
+}
+function loadTableData() {
+    const tableData = JSON.parse(localStorage.getItem("profitTableData")) || [];
+    const tableBody = document.querySelector("#profitTable tbody");
+
+    tableBody.innerHTML = ""; // Vyprázdníme obsah tabulky
+
+    tableData.forEach(rowData => {
+        const newRow = `
+            <tr>
+                <td><input type="file" accept="image/*" onchange="previewImage(event, this)">
+                    <img class="image-preview" src="${rowData.image}">
+                </td>
+                <td><input type="text" class="name" value="${rowData.name}"></td>
+                <td><input type="number" class="bought" value="${rowData.bought}"></td>
+                <td><input type="number" class="invested" value="${rowData.invested}"></td>
+                <td><input type="number" class="sold" value="${rowData.sold}"></td>
+                <td class="profit">${rowData.profit}</td>
+            </tr>`;
+        tableBody.insertAdjacentHTML("beforeend", newRow);
+    });
+}
+document.querySelector("#profitTable tbody").addEventListener("input", saveTableData);
+function saveTableData() {
+    const tableData = [];
+    document.querySelectorAll("#profitTable tbody tr").forEach(row => {
+        const rowData = {
+            image: row.querySelector(".image-preview").src || "", // Uloží datové URL obrázku
+            name: row.querySelector(".name").value || "",
+            bought: row.querySelector(".bought").value || 0,
+            invested: row.querySelector(".invested").value || 0,
+            sold: row.querySelector(".sold").value || 0,
+            profit: row.querySelector(".profit").textContent || "0"
+        };
+        tableData.push(rowData);
+    });
+
+    // Uloží data do localStorage
+    localStorage.setItem("profitTableData", JSON.stringify(tableData));
+}
+document.addEventListener('DOMContentLoaded', function () {
+    loadTableData();
 });
+
+function loadTableData() {
+    const tableData = JSON.parse(localStorage.getItem("profitTableData")) || [];
+    const tableBody = document.querySelector("#profitTable tbody");
+
+    tableBody.innerHTML = ""; // Vyprázdní tabulku
+
+    tableData.forEach(rowData => {
+        const newRow = `
+            <tr>
+                <td><input type="file" accept="image/*" onchange="previewImage(event, this)">
+                    <img class="image-preview" src="${rowData.image}">
+                </td>
+                <td><input type="text" class="name" value="${rowData.name}"></td>
+                <td><input type="number" class="bought" value="${rowData.bought}"></td>
+                <td><input type="number" class="invested" value="${rowData.invested}"></td>
+                <td><input type="number" class="sold" value="${rowData.sold}"></td>
+                <td class="profit">${rowData.profit}</td>
+            </tr>`;
+        tableBody.insertAdjacentHTML("beforeend", newRow);
+    });
+}
